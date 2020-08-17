@@ -7,7 +7,9 @@
 #include <string.h>
 #include <iostream>
 #include <map>
-struct treeNode {
+
+class treeNode {
+public:
     treeNode *left, *right;
     int count;
     bool terminate;
@@ -23,7 +25,7 @@ int main(int argc, char* argv[]) {
     if (argc != 2)
         return 0;
     int nlength = strlen(argv[1]);
-    if (nlength < 5 || argv[1][nlength-1] != 'x' || argv[1][nlength-2] != 'x' || argv[1][nlength-3] != 'x' || argv[1][nlength-4] != '.') {
+    if (nlength < 5 || argv[1][nlength - 1] != 'h' || argv[1][nlength - 2] != 'r' || argv[1][nlength - 3] != 'a' || argv[1][nlength - 4] != '.') {
         return 0;
     }
     std::ifstream input(argv[1], std::ios::binary);
@@ -57,7 +59,6 @@ int main(int argc, char* argv[]) {
         }
         outputname.push_back(inputchar);
     }
-    std::cout << "this is name : " << outputname << "\n";
 
     std::ofstream output(outputname, std::ios::binary);
     if (!output)
@@ -76,41 +77,38 @@ int main(int argc, char* argv[]) {
 
 
     if (!input.read((char *)&inputuchar, sizeof(char))) {
-        std::cout << "Something went wrong...";
+        std::cerr << "Something went wrong...";
         return 0;
     }
     temp = (unsigned int)inputuchar;
     numofsymb<<=8;
     numofsymb|=temp;
     if (!input.read((char *)&inputuchar, sizeof(char))) {
-        std::cout << "Something went wrong...";
+        std::cerr << "Something went wrong...";
         return 0;
     }
     temp = (unsigned int)inputuchar;
     numofsymb<<=8;
     numofsymb|=temp;
-    std::cout << numofsymb << "numofsym\n";
     for (unsigned int i = 0u; i < numofsymb; ++i) {
         temproot = root;
         if (!input.read((char *)&symbolourselves, sizeof(char))) {
-            std::cout << "Something went wrong...";
+            std::cerr << "Something went wrong...";
             return 0;
         }
         if (!input.read((char *)&inputuchar, sizeof(char))) {
-            std::cout << "Something went wrong...";
+            std::cerr << "Something went wrong...";
             return 0;
         }
         temp = (unsigned int) inputuchar;
-        std::cout << temp << " temp N" << i << "numofsym\n";
-        std::cout << "'" << symbolourselves << "' - symbol\n";
+
         while (temp > 0u) {
             if (!input.read((char *)&inputuchar, sizeof(char))) {
-                std::cout << "Something went wrong...";
+                std::cerr << "Something went wrong...";
                 return 0;
             }
             int iter = 7;
             while (temp > 0u && iter >= 0) {
-                std::cout << ((inputuchar>>iter)&1 ? 1 : 0);
                 if ((inputuchar>>iter)&1) {
                     if (temproot -> right == root) {
                         temproot -> right = new treeNode();
@@ -127,7 +125,6 @@ int main(int argc, char* argv[]) {
                 --temp;
                 --iter;
             }
-            std::cout << " k\n";
         }
         temproot -> terminate = true;
         temproot -> symbol = symbolourselves;
@@ -136,18 +133,17 @@ int main(int argc, char* argv[]) {
     unsigned long long rawdatasize = 0ull, rawtemp = 0ull;
     for (int i = 0; i < 8; i++) {
         if (!input.read((char *)&inputuchar, sizeof(char))) {
-            std::cout << "Something went wrong...";
+            std::cerr << "Something went wrong...";
             return 0;
         }
         rawtemp = (unsigned long long)inputuchar;
         rawdatasize<<=8;
         rawdatasize|=rawtemp;
     }
-    std::cout << rawdatasize << " rawdsize\n";
 
     while (rawdatasize > 0ull) {
         if (!input.read((char *)&inputuchar, sizeof(char))) {
-            std::cout << "Something went wrong...";
+            std::cerr << "Something went wrong...";
             return 0;
         }
         int iter = 7;
